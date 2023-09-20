@@ -23,29 +23,36 @@ Install the devkitARM toolchain of devkitPro as per [the instructions on their w
 
 To set up the repository:
 
-	git clone https://github.com/pret/pokeemerald
+	git clone https://github.com/Deokishisu/CrystalDust
 	git clone https://github.com/pret/agbcc
 
 	cd ./agbcc
 	./build.sh
-	./install.sh ../pokeemerald
+	./install.sh ../CrystalDust
 
-	cd ../pokeemerald
+ 	cd ../CrystalDust
 
-To build **pokeemerald.gba** for the first time and confirm it matches the official ROM image:
+ ## Poryscript
+ You will also need to install Poryscript. If you're on x86-64, simply download the latest build from https://github.com/huderlem/poryscript/releases/ and copy it into CrystalDust/tools/poryscript.
 
-	make compare
+ On other platforms (e.g. arm64), you will need to build Poryscript from source, which requires the [golang toolchain](https://go.dev/) to be installed. Follow the instructions at https://github.com/huderlem/poryscript#building-from-source
 
-If an OK is returned, then the installation went smoothly.
+ They boil down to 
 
-**Windows users:** Consider adding exceptions for the `pokeemerald` and `agbcc` folders in Windows Security using [these instructions](https://support.microsoft.com/help/4028485). This prevents Microsoft Defender from scanning them which might improve performance while building.
+	cd <parent_of_CrystalDust>
+ 	git clone https://github.com/huderlem/poryscript.git
+	cd poryscript
+	go build
+	./install.sh ../CrystalDust
+
+**Windows users:** Consider adding exceptions for the `CrystalDust` and `agbcc` folders in Windows Security using [these instructions](https://support.microsoft.com/help/4028485). This prevents Microsoft Defender from scanning them which might improve performance while building.
 
 
 # Start
 
-To build **pokeemerald.gba** with your changes:
+This project requires the `arm-none-eabi-gcc` compiler included with devkitARM r52. To build **CrystalDust.gba** with your changes:
 
-	make
+	make modern
 
 **macOS users:** If the base tools are not found in new Terminal sessions after the first successful build, run `echo "if [ -f ~/.bashrc ]; then . ~/.bashrc; fi" >> ~/.bash_profile` once to prevent the issue from occurring again. Verify that the `devkitarm-rules` package is installed as well; if not, install it by running `sudo dkp-pacman -S devkitarm-rules`.
 
@@ -59,23 +66,16 @@ See [the GNU docs](https://www.gnu.org/software/make/manual/html_node/Parallel.h
 
 To speed up building, run:
 
-	make -j$(nproc)
+	make -j$(nproc) modern
 
 `nproc` is not available on macOS. The alternative is `sysctl -n hw.ncpu` ([relevant Stack Overflow thread](https://stackoverflow.com/questions/1715580)).
 
 
 ## Debug info
 
-To build **pokeemerald.elf** with enhanced debug info:
+To build **CrystalDust.elf** with enhanced debug info:
 
-	make DINFO=1
-
-
-## devkitARM's C compiler
-
-This project supports the `arm-none-eabi-gcc` compiler included with devkitARM r52. To build this target, simply run:
-
-	make modern
+	make DINFO=1 modern
 
 
 ## Other toolchains
